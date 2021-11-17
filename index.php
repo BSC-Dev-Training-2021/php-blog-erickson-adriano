@@ -60,7 +60,7 @@ require_once("model.php");
                           
                             <div class="card-body">
                                 <div class="small text-muted"><?php echo $row['created_date'];?></div>
-                                <h2 class="card-title"></h2><?php echo $row['title'];; ?></h2>
+                                <h2 class="card-title"><h2><?php echo $row['title'];; ?></h2>
                                 <p class="card-text"><?php echo $row['description'];?></p>
                                 <form action="article.php" method="post">
                                     <input type="hidden" name="id"  value="<?php echo $row['id'];?>">

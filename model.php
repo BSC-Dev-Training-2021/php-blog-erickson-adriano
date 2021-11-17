@@ -58,7 +58,7 @@
             $description = $_POST['description'];
             $content = $_POST['content'];
             $created_by = '1';
-            $created_date = date('y/m/d ', time());
+            $created_date = date("l jS \of F Y ", time());
 
             $cate = count($_POST['checkboxvar']);
                     

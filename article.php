@@ -46,9 +46,6 @@
 
                         $id = $_POST['id'];
                         }
-                        echo $id;
-
-
                                 $obj = new model(); 
                                 $result = $obj->article("blog_post",$id); 
                                 foreach ($result as $row):
