@@ -109,5 +109,23 @@
 
         }
 
+        function article($table,$id){
+       
+             
+            try {  
+            $sql="SELECT * FROM $table where id = '$id'";  
+            $q = $this->db->query($sql) or die("failed!");
+
+            while($r = $q->fetch(PDO::FETCH_ASSOC)){  $data[]=$r;  }  
+            return $data;
+
+             }
+            catch(PDOException $e)
+            {
+        echo 'Query failed'.$e->getMessage();
+            }
+            
+}
+
 
 }

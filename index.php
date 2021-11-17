@@ -62,7 +62,10 @@ require_once("model.php");
                                 <div class="small text-muted"><?php echo $row['created_date'];?></div>
                                 <h2 class="card-title"></h2><?php echo $row['title'];; ?></h2>
                                 <p class="card-text"><?php echo $row['description'];?></p>
-                                <a class="btn btn-primary" href="article.php">Read more →</a>
+                                <form action="article.php" method="post">
+                                    <input type="hidden" name="id"  value="<?php echo $row['id'];?>">
+                                <button type="submit" name="readmore" class="btn btn-primary"value="" href="article.php">Read more →</button>
+                                </form>
                             </div>
                             <?php
                             endforeach;
