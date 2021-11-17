@@ -5,7 +5,9 @@
        function __construct($tablename= ''){
 
             $this->table = $tablename; 
-            $this->connect();  
+            $this->connect();
+            
+
         }
 
 
@@ -18,13 +20,20 @@
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
 
-        function findAll(){
+        function findAll($table){
        
-                
-            
-                $query ="select * from  blog_post";
-                $d = $this->db->query($query);
-               
+             try {  
+            $sql="SELECT * FROM $table order by id DESC";  
+            $q = $this->db->query($sql) or die("failed!");
+
+            while($r = $q->fetch(PDO::FETCH_ASSOC)){  $data[]=$r;  }  
+            return $data;
+
+             }
+            catch(PDOException $e)
+            {
+        echo 'Query failed'.$e->getMessage();
+            }
             
 
            
@@ -45,19 +54,15 @@
 
            if(isset($_POST['post_blog'])){
 
-                     $title = $_POST['title'];
-                     $description = $_POST['description'];
-                    $content = $_POST['content'];
-                    $created_by = '1';
-                     $created_date = date('y/m/d ', time());
-                     
-                    if (isset($_POST['checkboxvar'])) {
-                       $category = implode(',', $_POST['checkboxvar']) ;   
-                      $cate = count($_POST['checkboxvar']);
-                    }
-                    else {
-                        $error = 'you need to select category';
-                    }
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $content = $_POST['content'];
+            $created_by = '1';
+            $created_date = date('y/m/d ', time());
+
+            $cate = count($_POST['checkboxvar']);
+                    
+                       
 
                     
                         $sql ="INSERT INTO blog_post ( `content`, `title`,  `created_by`, `created_date`, `description`) VALUES (?,?,?,?,?)";
