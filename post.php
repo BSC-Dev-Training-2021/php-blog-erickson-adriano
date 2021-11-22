@@ -3,13 +3,12 @@
  require_once 'model/blogpost.php';  
  $data = new post();  
  $success_message = '';  
- if(isset($_POST["post_blog"]))  {      
-        $categories =  implode(',', $_POST['checkboxvar']);
+ if( isset ( $_POST["post_blog"] ) )  {      
+        $categories =  implode( ',', $_POST['checkboxvar'] );
         $user_id = "1";
         $created_by = '1';
         $created_date = date("l jS \of F Y ", time());
-
-
+        //making arraykey and array value
         $insert_data = array(  
         'content'        =>     mysqli_real_escape_string($data->con, $_POST['content']),  
         'title'          =>     mysqli_real_escape_string($data->con, $_POST['title']),
@@ -21,14 +20,14 @@
        
        
         if($lastid){     
-            foreach ($_POST['checkboxvar'] as $value) {
+            foreach ( $_POST['checkboxvar'] as $value ) {
                    # code...
                 $postcat= array(
                 'category_id'   =>     mysqli_real_escape_string($data->con, $value),
                 'blog_post_id'    =>     mysqli_real_escape_string($data->con, $lastid)); 
                 require_once 'model/blog_post_categories.php ';
                 $data = new postcat(); 
-               $result= $data->insert($postcat);
+               $result= $data->insert( $postcat );
             }
                $success_message = '<div class="alert alert-success"> <strong>
                                     insert success Insert Again!</strong>

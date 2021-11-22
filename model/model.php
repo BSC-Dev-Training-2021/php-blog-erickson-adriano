@@ -36,6 +36,16 @@
            }  
            return $array; 
         }
+        function findId($id){
+       
+           $array = array();  
+           $query = "SELECT * FROM ". $this->tableName ." where category_id = '" . $id . "'";  
+           $result = mysqli_query($this->con, $query);  
+           while($row = mysqli_fetch_assoc($result)) {    
+            $array[] = $row;  
+           }  
+           return $array; 
+        }
         //to get the comment
         function findcommentById($id ,$article){
        
@@ -47,6 +57,7 @@
            }  
            return $array; 
         }
+
        function insert( $data){
             /*
                 put your generic INSERT query here

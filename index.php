@@ -23,11 +23,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" href="post.html">Post</a></li>
-                        <li class="nav-item"><a class="nav-link" href="messages.html"><i class="fa fa-envelope-o"></i></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="post.php">Post</a></li>
+                        <li class="nav-item"><a class="nav-link" href="messages.php"><i class="fa fa-envelope-o"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -49,23 +49,48 @@
                     <!-- Featured blog post-->
                     <div class="card mb-4">
                          <?php  
+
+                     
+                            if(isset($_GET['id'])){
+
+                                $id= $_GET['id'];
+                                     require_once 'model/model.php';
+                                       require_once("model/blog_post_categories.php");
+                                        $obj = new postcat(); 
+                                        $res = $obj->findId( $id);
+                                        foreach ($res as $blog_id) {
+                                                        $id_blog = $blog_id['blog_post_id']; 
+                                                require_once("model/blogpost.php");
+                                                $obj = new post(); 
+                                                $result = $obj->findById($id_blog); 
+                                            foreach ($result as $row) :?>
+                                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                                        <div class="card-body">
+                                            <div class="small text-muted"><?php echo $row['created_date'];?></div>
+                                            <h2 class="card-title"><h2><?php echo $row['title'];; ?></h2>
+                                            <p class="card-text"><?php echo $row['description'];?></p>
+                                            <a   class="btn btn-primary" href="article.php?id=<?php echo $row['id']; ?>">Read more →</a>
+                                        </div>
+                                    <?php endforeach;} ?>
+                                <?php
+                            }
+                            else{
                                 require_once("model/view_post_blog.php");
                                 $obj = new view(); 
                                 $result = $obj->findAll(); 
+
                                 foreach ($result as $row) :
-                                   
-                          ?>
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                          
-                            <div class="card-body">
-                                <div class="small text-muted"><?php echo $row['created_date'];?></div>
-                                <h2 class="card-title"><h2><?php echo $row['title'];; ?></h2>
-                                <p class="card-text"><?php echo $row['description'];?></p>
-                                <a   class="btn btn-primary" href="article.php?id=<?php echo $row['id']; ?>">Read more →</a>
-                            </div>
-                            <?php
-                            endforeach;
-                            ?>
+                                    ?>
+
+                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                              
+                                <div class="card-body">
+                                    <div class="small text-muted"><?php echo $row['created_date'];?></div>
+                                    <h2 class="card-title"><h2><?php echo $row['title'];; ?></h2>
+                                    <p class="card-text"><?php echo $row['description'];?></p>
+                                    <a   class="btn btn-primary" href="article.php?id=<?php echo $row['id']; ?>">Read more →</a>
+                                </div>
+                            <?php endforeach; } ?>
                     </div>
                     
                     <!-- Pagination-->
@@ -100,19 +125,22 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-6">
+                                         <?php  
+                                            require_once("model/view_category.php");
+                                            $obj = new categories(); 
+                                            $result = $obj->findAll(); 
+                                            foreach ($result as $row) :
+                                               
+                                               
+                                      ?>
+
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
+                                        <li><a href="index.php?id=<?php echo $row['id'];?>"><?php echo  $row['name']; ?></a></li>
+                                        
                                     </ul>
+                                <?php endforeach;?>
                                 </div>
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
-                                    </ul>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
