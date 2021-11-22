@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -22,11 +24,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" href="post.html">Post</a></li>
-                        <li class="nav-item"><a class="nav-link" href="messages.html"><i class="fa fa-envelope-o"></i></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="post.php">Post</a></li>
+                        <li class="nav-item"><a class="nav-link" href="messages.php"><i class="fa fa-envelope-o"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -34,16 +36,16 @@
         <!-- Page content-->
         <div class="container mt-5">
             <div class="row">
+
                 <div class="col-lg-8">
                     <!-- Post content-->
                     <article>
-                        <!-- Post header-->
-                        <?php
+                       <?php
                          $id_article = $_GET['id'];
                          
-                              require_once("model/model.php");
-                                $obj = new model(); 
-                                $result = $obj->findById("blog_post",$id_article); 
+                              require_once 'model/view_post_blog.php';
+                                $obj = new view(); 
+                                $result = $obj->findById($id_article); 
                                 foreach ($result as $row):
                         ?>
                         <!-- Post header-->
@@ -74,52 +76,84 @@
                         <div class="card bg-light">
                             <div class="card-body">
                                 <!-- Comment form-->
-                                <form class="mb-4">
+                                <form method="post" action="" class="mb-4">
                                     <div>
-                                        <textarea class="form-control mb-2" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                        <textarea class="form-control mb-2" rows="3" name="comment_post" placeholder="Join the discussion and leave a comment!"></textarea>
+
                                     </div>
+                                    <input type="hidden" name="id_article" value="<?php echo $id_article?>">
                                     <div>
-                                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                                        <button type="submit" name="comment" class="btn btn-primary">Post Comment</button>
                                     </div>
+                                     
                                 </form>
                                 <!-- Comment with nested comments-->
-                                <div class="d-flex mb-4">
+                                <?php
+                                    if (isset($_POST['comment'])){
+        
+                                         $userid = "1";
+                                       $date =  $created_date = date("l jS \of F Y ", time());
+                                       require_once 'model/model.php';
+                                         require_once'model/comment.php';
+                                        $data = new comment();
+                                        $insert_comment = array(  
+                                        'comment'        =>     mysqli_real_escape_string($data->con, $_POST['comment_post']),  
+                                        'user_id'        =>     mysqli_real_escape_string($data->con, $userid),
+                                        'article_id'     =>     mysqli_real_escape_string($data->con, $_POST['id_article']),
+                                        'comment_date'   =>     mysqli_real_escape_string($data->con, $date),
+                                                );
+
+                                         $data->insert($insert_comment);
+                                            
+                                        }
+
+                                ?>
                                     <!-- Parent comment-->
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-                                        <!-- Child comment 1-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                                            </div>
-                                        </div>
-                                        <!-- Child comment 2-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                When you put money directly to a problem, it makes a good headline.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    
+                            
                                 <!-- Single comment-->
-                                <div class="d-flex">
+                               
+                                     <?php  
+                                            
+                                            require_once 'model/user.php';
+                                            $obj = new user(); 
+                                             $user_id ="1";
+                                            $result = $obj->findById( $user_id); 
+                                            foreach ($result as $row) {
+                                                       $name = $row['name'];
+                                                        $id_author= $row['id'];
+                                                   
+                                         }
+                                          
+                                            require_once 'model/comment.php';
+                                            $obj2 = new comment(); 
+                                            $result2 = $obj2->findcommentById( $id_author,$id_article); 
+                                            foreach ($result2 as $row2) :
+                                                
+                                            $comments = $row2['comment'];
+                                               
+                                            
+                                               
+                                        ?>
+                                   <div class="d-flex">
                                     <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
                                     <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
+                                        <div class="fw-bold"><?php echo $name;?></div>
+                                        
+                                        <?php echo $comments;?>
                                     </div>
                                 </div>
+                                <br>    
+                                <?php  endforeach;?>
                             </div>
                         </div>
                     </section>
                 </div>
+            
                 <!-- Side widgets-->
+
+
+
                 <div class="col-lg-4">
                     <!-- Search widget-->
                     <div class="card mb-4">

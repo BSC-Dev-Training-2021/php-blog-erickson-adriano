@@ -1,11 +1,10 @@
 <?php  
-   
- include 'model/model.php';  
- $data = new model;  
+  require_once 'model/model.php'; 
+ require_once 'model/blogpost.php';  
+ $data = new post();  
  $success_message = '';  
- if(isset($_POST["post_blog"]))  
- {      
-       echo implode(',', $_POST['checkboxvar']);
+ if(isset($_POST["post_blog"]))  {      
+        $categories =  implode(',', $_POST['checkboxvar']);
         $user_id = "1";
         $created_by = '1';
         $created_date = date("l jS \of F Y ", time());
@@ -18,14 +17,24 @@
         'created_date'   =>     mysqli_real_escape_string($data->con, $created_date),
         'description'    =>     mysqli_real_escape_string($data->con, $_POST['description'])
       );  
-      if($data->insert('blog_post', $insert_data))  
-      {  
-
-           $success_message = '<div class="alert alert-success"> <strong>
-                                insert success Insert Again!</strong>
-                                </div>'  ;  
-      }       
- }  
+       $lastid = $data->insert($insert_data);
+       
+       
+        if($lastid){     
+            foreach ($_POST['checkboxvar'] as $value) {
+                   # code...
+                $postcat= array(
+                'category_id'   =>     mysqli_real_escape_string($data->con, $value),
+                'blog_post_id'    =>     mysqli_real_escape_string($data->con, $lastid)); 
+                require_once 'model/blog_post_categories.php ';
+                $data = new postcat(); 
+               $result= $data->insert($postcat);
+            }
+               $success_message = '<div class="alert alert-success"> <strong>
+                                    insert success Insert Again!</strong>
+                                    </div>'  ;  
+        } 
+}  
  ?>  
 <!DOCTYPE html>
 <html lang="en">
@@ -94,14 +103,16 @@
                                         <div class="row">
                                             <div class="col-lg-6">
                                                  <?php  
-                                                  $post_data = $data->findAll('category_types');  
-                                                  foreach($post_data as $row)  
+                                                require_once 'model/view_category.php' ;
+                                                $obj = new categories; 
+                                                $result = $obj->findAll();  
+                                                  foreach($result as $row)  
                                                   : 
                                                   ?>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" name="checkboxvar[]" type="checkbox" value="<?php  echo $row['id'];?>" id="defaultCheck1" required>
+                                                    <input class="form-check-input" name="checkboxvar[]" type="checkbox" value="<?php  echo $row['id'];?>" id="defaultCheck1" >
                                                     <label class="form-check-label" for="defaultCheck1">
-                                                    <?php echo $row['name'];?>
+                                                    <?php echo$row['name'];?>
                                                     </label>
                                                 </div> 
                                             <?php endforeach; ?>
