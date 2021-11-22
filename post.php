@@ -1,7 +1,32 @@
-<?php
-require_once("model.php");
+<?php  
+   
+ include 'model/model.php';  
+ $data = new model;  
+ $success_message = '';  
+ if(isset($_POST["post_blog"]))  
+ {      
+       echo implode(',', $_POST['checkboxvar']);
+        $user_id = "1";
+        $created_by = '1';
+        $created_date = date("l jS \of F Y ", time());
 
-?>
+
+        $insert_data = array(  
+        'content'        =>     mysqli_real_escape_string($data->con, $_POST['content']),  
+        'title'          =>     mysqli_real_escape_string($data->con, $_POST['title']),
+        'created_by'     =>     mysqli_real_escape_string($data->con, $created_by), 
+        'created_date'   =>     mysqli_real_escape_string($data->con, $created_date),
+        'description'    =>     mysqli_real_escape_string($data->con, $_POST['description'])
+      );  
+      if($data->insert('blog_post', $insert_data))  
+      {  
+
+           $success_message = '<div class="alert alert-success"> <strong>
+                                insert success Insert Again!</strong>
+                                </div>'  ;  
+      }       
+ }  
+ ?>  
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,7 +35,7 @@ require_once("model.php");
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Blog Post - Start Bootstrap Template</title>
-        <script src="js/jquery-3.6.0.min.js"></script>  
+        <script src="js/jquery-3.6.0.min.js"></script>
         <script src="js/app.js"></script>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
@@ -50,47 +75,42 @@ require_once("model.php");
                             </header>
                             <!-- Post content-->
                             <section class="mb-5">
-                                
-    <!-- start form-->          <form method="post" action="blogpost.php">
+                                <?php  if(isset($success_message)){ echo   $success_message ;} //sucess message  ?>  
+                                <form method="post" action="">
                                     <div class="form-group">
                                         <label for="exampleFormControlTextarea1"  class="mb-1">Title</label>
                                         <input type="text" name="title" class="form-control mb-1">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleFormControlTextarea1"  class="mb-1">Description</label>
+                                        <label for="exampleFormControlTextarea1" class="mb-1">Description</label>
                                         <textarea class="form-control mb-1" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleFormControlTextarea1"  class="mb-1">Content</label>
+                                        <label for="exampleFormControlTextarea1" class="mb-1">Content</label>
                                         <textarea class="form-control mb-1" name="content" id="exampleFormControlTextarea1" rows="5"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="mb-1 mt-3">Categories</label>
                                         <div class="row">
-                                           <div class="col-lg-6">
-                                                    <?php 
-                                                    $obj = new model(); 
-                                                    $result = $obj->findAll("category_types"); 
-                                                    foreach ($result as $row) :
-                                                   ?>
+                                            <div class="col-lg-6">
+                                                 <?php  
+                                                  $post_data = $data->findAll('category_types');  
+                                                  foreach($post_data as $row)  
+                                                  : 
+                                                  ?>
                                                 <div class="form-check">
-                                                    
-                                                    <input class="form-check-input" name="checkboxvar[]" type="checkbox" value="<?php  echo $row['id'];?>" id="defaultCheck1">
+                                                    <input class="form-check-input" name="checkboxvar[]" type="checkbox" value="<?php  echo $row['id'];?>" id="defaultCheck1" required>
                                                     <label class="form-check-label" for="defaultCheck1">
                                                     <?php echo $row['name'];?>
-                                                      
                                                     </label>
-                                               
                                                 </div> 
                                             <?php endforeach; ?>
-
                                             </div>
+                                        </div>
                                     </div>
                                     
                                     <button type="submit" name="post_blog" class="btn btn-primary mt-5">Post</button>
-                                    
-    <!-- end of form-->         </form>
-                                 
+                                </form>
                             </section>
                         </div>
                         <div class="col-lg-4"></div>

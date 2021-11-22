@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,11 +22,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" href="post.php">Post</a></li>
-                        <li class="nav-item"><a class="nav-link" href="messages.php"><i class="fa fa-envelope-o"></i></a></li>
+                        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="post.html">Post</a></li>
+                        <li class="nav-item"><a class="nav-link" href="messages.html"><i class="fa fa-envelope-o"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -36,22 +34,18 @@
         <!-- Page content-->
         <div class="container mt-5">
             <div class="row">
-
                 <div class="col-lg-8">
                     <!-- Post content-->
                     <article>
-                       <?php
-                       require_once("model.php");
-                        if(isset($_POST['readmore'])){
-
-                        $id = $_POST['id'];
-                        }
+                        <!-- Post header-->
+                        <?php
+                         $id_article = $_GET['id'];
+                         
+                              require_once("model/model.php");
                                 $obj = new model(); 
-                                $result = $obj->article("blog_post",$id); 
+                                $result = $obj->findById("blog_post",$id_article); 
                                 foreach ($result as $row):
-                          
                         ?>
-
                         <!-- Post header-->
                         <header class="mb-4">
                             <!-- Post title-->
@@ -72,7 +66,7 @@
                             <h2 class="fw-bolder mb-4 mt-5"><?php echo $row['content'];?></h2>
                             <p class="fs-5 mb-4"><?php echo $row['content'];?></p>
                             <p class="fs-5 mb-4"><?php echo $row['content'];?></p>
-                          <?php endforeach;?>
+                          <?php  endforeach;?>
                         </section>
                     </article>
                     <!-- Comments section-->
@@ -126,9 +120,6 @@
                     </section>
                 </div>
                 <!-- Side widgets-->
-
-
-
                 <div class="col-lg-4">
                     <!-- Search widget-->
                     <div class="card mb-4">
