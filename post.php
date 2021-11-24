@@ -1,180 +1,82 @@
 <?php  
   require_once 'model/model.php'; 
- require_once 'model/blogpost.php';  
- $data = new post();  
- $success_message = '';  
- if( isset ( $_POST["post_blog"] ) )  {      
-        $categories =  implode( ',', $_POST['checkboxvar'] );
-        $user_id = "1";
-        $created_by = '1';
-        $created_date = date("l jS \of F Y ", time());
-        //making arraykey and array value
-        $insert_data = array(  
-        'content'        =>     mysqli_real_escape_string($data->con, $_POST['content']),  
-        'title'          =>     mysqli_real_escape_string($data->con, $_POST['title']),
-        'created_by'     =>     mysqli_real_escape_string($data->con, $created_by), 
-        'created_date'   =>     mysqli_real_escape_string($data->con, $created_date),
-        'description'    =>     mysqli_real_escape_string($data->con, $_POST['description'])
-      );  
-       $lastid = $data->insert($insert_data);
-       
-       
-        if($lastid){     
-            foreach ( $_POST['checkboxvar'] as $value ) {
-                   # code...
-                $postcat= array(
-                'category_id'   =>     mysqli_real_escape_string($data->con, $value),
-                'blog_post_id'    =>     mysqli_real_escape_string($data->con, $lastid)); 
-                require_once 'model/blog_post_categories.php ';
-                $data = new postcat(); 
-               $result= $data->insert( $postcat );
-            }
-               $success_message = '<div class="alert alert-success"> <strong>
-                                    insert success Insert Again!</strong>
-                                    </div>'  ;  
-        } 
-}  
+  require_once 'controller/controller.php'
  ?>  
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Blog Post - Start Bootstrap Template</title>
-        <script src="js/jquery-3.6.0.min.js"></script>
-        <script src="js/app.js"></script>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/font-awesome.min.css" rel="stylesheet" />
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="#!">My Blog</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="post.php">Post</a></li>
-                        <li class="nav-item"><a class="nav-link" href="messages.php"><i class="fa fa-envelope-o"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Page content-->
-        <div class="container mt-5">
+
+<!-- Responsive navbar-->
+<?php include_once 'header.php';?>
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 align-self-start">
             <div class="row">
-                <div class="col-lg-8 align-self-start">
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <!-- Contact Us header-->
-                            <header class="mb-8">
-                                <!-- Post title-->
-                                <h1 class="fw-bolder mb-1">Create a new blog entry</h1>
-                                <!-- Post meta content-->
-                                <div class="text-muted fst-italic mb-3">Express your mind!</div>
-                            </header>
-                            <!-- Post content-->
-                            <section class="mb-5">
-                                <?php  if(isset($success_message)){ echo   $success_message ;} //sucess message  ?>  
-                                <form method="post" action="">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlTextarea1"  class="mb-1">Title</label>
-                                        <input type="text" name="title" class="form-control mb-1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleFormControlTextarea1" class="mb-1">Description</label>
-                                        <textarea class="form-control mb-1" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleFormControlTextarea1" class="mb-1">Content</label>
-                                        <textarea class="form-control mb-1" name="content" id="exampleFormControlTextarea1" rows="5"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="mb-1 mt-3">Categories</label>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                 <?php  
-                                                require_once 'model/view_category.php' ;
-                                                $obj = new categories; 
-                                                $result = $obj->findAll();  
-                                                  foreach($result as $row)  
-                                                  : 
-                                                  ?>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" name="checkboxvar[]" type="checkbox" value="<?php  echo $row['id'];?>" id="defaultCheck1" >
-                                                    <label class="form-check-label" for="defaultCheck1">
-                                                    <?php echo$row['name'];?>
-                                                    </label>
-                                                </div> 
-                                            <?php endforeach; ?>
-                                            </div>
-                                        </div>
-                                    </div>
+                <div class="col-lg-8">
+                    <!-- Contact Us header-->
+                    <header class="mb-8">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1">Create a new blog entry</h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-3">Express your mind!</div>
+                    </header>
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <?php  if(isset($success_message)){ echo   $success_message ;} //sucess message  ?>  
+                        <form method="post" action="">
+                            <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
+                                <input id="upload" type="file" onchange="readURL(this);" class="form-control border-0">
+                                
+                                <div class="input-group-append">
+                                    <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">select photo</small></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1"  class="mb-1">Title</label>
+                                <input type="text" name="title" class="form-control mb-1">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1" class="mb-1">Description</label>
+                                <textarea class="form-control mb-1" name="description" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1" class="mb-1">Content</label>
+                                <textarea class="form-control mb-1" name="content" id="exampleFormControlTextarea1" rows="5"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="mb-1 mt-3">Categories</label>
+                                <div class="row">
                                     
-                                    <button type="submit" name="post_blog" class="btn btn-primary mt-5">Post</button>
-                                </form>
-                            </section>
-                        </div>
-                        <div class="col-lg-4"></div>
-                    </div>
-                </div>
-                <!-- Side widgets-->
-                <div class="col-lg-4">
-                    <!-- Search widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Search</div>
-                        <div class="card-body">
-                            <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Categories widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Categories</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
-                                    </ul>
+                                         <?php  
+                                        require_once 'model/view_category.php' ;
+                                        $obj = new categories; 
+                                        $result = $obj->findAll();  
+                                          foreach($result as $row)  
+                                          : 
+                                          ?>
+                                       <div class="col-lg-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" name="checkboxvar[]" type="checkbox" value="<?php  echo $row['id'];?>" id="defaultCheck1" >
+                                            <label class="form-check-label" for="defaultCheck1">
+                                            <?php echo$row['name'];?>
+                                            </label>
+                                        </div> 
+                                    </div>
+                                    <?php endforeach; ?>
+                                    
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Side widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
+                            
+                            <button type="submit" name="post_blog" class="btn btn-primary mt-5">Post</button>
+                        </form>
+                    </section>
                 </div>
+                <div class="col-lg-4"></div>
             </div>
         </div>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
-</html>
+        <!-- Side widgets-->
+        
+       <?php include_once 'sidewidgets.php';?>
+    </div>
+</div>
+<!-- Footer-->
+<?php include_once 'footer.php';?>

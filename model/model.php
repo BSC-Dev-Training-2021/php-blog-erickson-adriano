@@ -27,7 +27,6 @@
            return $array; 
         }
         function findById($id){
-       
            $array = array();  
            $query = "SELECT * FROM ". $this->tableName ." where id = '" . $id . "'";  
            $result = mysqli_query($this->con, $query);  
@@ -37,9 +36,17 @@
            return $array; 
         }
         function findId($id){
-       
            $array = array();  
            $query = "SELECT * FROM ". $this->tableName ." where category_id = '" . $id . "'";  
+           $result = mysqli_query($this->con, $query);  
+           while($row = mysqli_fetch_assoc($result)) {    
+            $array[] = $row;  
+           }  
+           return $array; 
+        }
+        function findIdcat($idName,$id){
+           $array = array();  
+           $query = "SELECT * FROM ". $this->tableName ." where ". $idName ."  = '" . $id . "'";  
            $result = mysqli_query($this->con, $query);  
            while($row = mysqli_fetch_assoc($result)) {    
             $array[] = $row;  
